@@ -6,16 +6,14 @@
 </head>
 <body>
 
-<p th:text="'name: ' + ${person.getName()}">name</p>
-<p th:text="'surname: ' + ${person.getSurname()}">surname</p>
-<p th:text="'patronymic: ' + ${person.getPatronymic()}">patronymic</p>
-<p th:text="'birth year: ' + ${person.getBirthYear()}">year</p>
-
+<p th:text="'FIO: ' + ${person.getFIO()}">fio</p>
+<p th:text="'name: ' + ${person.getBirthYear()}">birth year</p>
 <br/>
 
 <p>Taken books:</p>
 <div th:each="book : ${books}" th:if="${!books.isEmpty()}">
-    <a th:href="@{/books/{id}(id=${book.getBook_id()})}"
+    <a th:href="@{/books/{id}(id=${book.getId()})}"
+        th:style="${book.isDelayed()? 'color: red': 'color: black'}"
         th:text="${book.getName()}">
         book
     </a>
@@ -27,8 +25,8 @@
 <br/>
 <hr/>
 
-<a th:href="@{/people/{id}/edit(id=${person.getUser_id()})}">Edit data</a>
-<form th:method="DELETE" th:action="@{/people/{id}(id=${person.getUser_id()})}">
+<a th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit data</a>
+<form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
 <input type="submit" value="delete"/>
 </form>
 

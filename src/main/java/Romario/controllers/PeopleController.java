@@ -1,49 +1,57 @@
 package Romario.controllers;
 
-import Romario.controllers.dao.PersonDAO;
-
-import Romario.controllers.models.Person;
+import Romario.models.Person;
+import Romario.services.PeopleService;
+import Romario.util.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
 public class PeopleController {
-
-    private final PersonDAO personDAO;
+    private final PeopleService peopleService;
+    private final PersonValidator personValidator;
 
     @Autowired
-    public PeopleController(PersonDAO personDAO) {
-        this.personDAO = personDAO;
+    public PeopleController(PeopleService peopleService, PersonValidator personValidator) {
+        this.peopleService = peopleService;
+        this.personValidator = personValidator;
     }
 
     @GetMapping()
-    // Список всех людей
     public String peoplePage(Model model) {
-        // Вместе с возвращаемой страницей, кидаем с помощью модели на эту страницу список людей для отображения
-        model.addAttribute("people", personDAO.getPeople());
-        // Путь по папкам к странице со списком. Возможно такая иерархия должна соответствовать и пути в URL
+        model.addAttribute("people", peopleService.getPeople());
         return "people/people";
     }
 
     @PostMapping()
-    public String createPerson(@ModelAttribute("person") Person person) {
-        personDAO.add(person);
+    public String createPerson(@ModelAttribute("person") @Valid Person person,
+                               BindingResult bindingResult) {
+        personValidator.validate(person, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return "people/new";
+        }
+
+        peopleService.addPerson(person);
         return "redirect:/people";
     }
 
     @GetMapping("/{id}")
     public String showPerson(@PathVariable("id") int id, Model model) {
-        model.addAttribute("person", personDAO.getPerson(id));
-        model.addAttribute("books", personDAO.getTakenBooks(id));
+        model.addAttribute("person", peopleService.getPerson(id));
+        model.addAttribute("books", peopleService.getTakenBooks(id));
         return "people/show";
     }
 
     @DeleteMapping("/{id}")
     public String deletePerson(@PathVariable("id") int id) {
-        personDAO.delete(id);
+        peopleService.deletePerson(id);
         return "redirect:/people";
     }
 
@@ -55,15 +63,19 @@ public class PeopleController {
 
     @GetMapping("/{id}/edit")
     public String editPerson(@PathVariable("id") int id, Model model) {
-        model.addAttribute("person", personDAO.getPerson(id));
+        model.addAttribute("person", peopleService.getPerson(id));
         return "people/edit";
     }
 
     @PatchMapping("/{id}/edit")
-    public String updatePerson(@PathVariable("id") int id, @ModelAttribute("person") Person person) {
-        personDAO.update(id, person);
+    public String updatePerson(@PathVariable("id") int id,
+                               @ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
+        personValidator.validate(person, bindingResult);
+
+        if (bindingResult.hasErrors())
+            return "people/edit";
+
+        peopleService.updatePerson(id, person);
         return "redirect:/people";
     }
-
-
 }

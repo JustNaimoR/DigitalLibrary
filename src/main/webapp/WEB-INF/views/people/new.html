@@ -8,19 +8,13 @@
 
 <form th:method="POST" th:action="@{/people}" th:object="${person}">
     <label for="name">name: </label>
-    <input name="name" type="text"  th:field="*{name}" id="name"/>
-    <br/>
-
-    <label for="surname">surname: </label>
-    <input name="surname" type="text"  th:field="*{surname}" id="surname"/>
-    <br/>
-
-    <label for="patronymic">patronymic: </label>
-    <input name="patronymic" type="text"  th:field="*{patronymic}" id="patronymic"/>
+    <input name="name" type="text"  th:field="*{FIO}" id="name"/>
+    <div style="color: red" th:if="${#fields.hasErrors('FIO')}" th:errors="*{FIO}">error</div>
     <br/>
 
     <label for="birth year">birth year: </label>
     <input name="birth year" type="text"  th:field="*{birthYear}" id="birth year"/>
+    <div style="color: red" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}">error</div>
     <br/>
 
     <input type="submit" value="Add person"/>
