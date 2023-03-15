@@ -17,11 +17,11 @@
     <p1 th:case="null">
         <p th:text="'This book is free for now'">not link</p>
 
-        <form th:method="PATCH" th:action="@{/books/{id}(id=${book.getBook_id()})}">
+        <form th:method="PATCH" th:action="@{/books/{id}(id=${book.getId()})}">
             <label for="person">Choose a person:</label>
-            <select th:object="${person}" th:field="*{user_id}" id="person">
-                <option th:each="person : ${people}" th:value="${person.getUser_id()}"
-                        th:text="${person.getName() + ' ' + person.getSurname()}">text</option>
+            <select th:object="${person}" th:field="*{id}" id="person">
+                <option th:each="person : ${people}" th:value="${person.getId()}"
+                        th:text="${person.getFIO()}">text</option>
             </select>
 
             <input type="submit" value="Выдать книгу">
@@ -29,10 +29,10 @@
     </p1>
     <p1 th:case="*">
         <p>Book is taken by:</p>
-        <a th:href="@{/people/{id}(id=${taken_person.getUser_id()})}"
-        th:text="${taken_person.getName() + ' ' + taken_person.getSurname() + ' ' + taken_person.patronymic}">href</a>
+        <a th:href="@{/people/{id}(id=${taken_person.getId()})}"
+        th:text="${taken_person.getFIO()}">href</a>
 
-        <form th:method="PUT" th:action="@{/books/{id}(id=${book.getBook_id()})}">
+        <form th:method="PUT" th:action="@{/books/{id}(id=${book.getId()})}">
             <input type="submit" value="  Освободить книгу"/>
         </form>
     </p1>
@@ -41,9 +41,9 @@
 <br/>
 <hr/>
 
-<a th:href="@{/books/{id}/edit(id=${book.getBook_id()})}">Edit data</a>
+<a th:href="@{/books/{id}/edit(id=${book.getId()})}">Edit data</a>
 
-<form th:method="DELETE" th:action="@{/books/{id}(id=${book.getBook_id()})}">
+<form th:method="DELETE" th:action="@{/books/{id}(id=${book.getId()})}">
     <input type="submit" value="delete"/>
 </form>
 

@@ -7,9 +7,25 @@
 <body>
 
 <div th:each="book : ${book_list}">
-    <a th:href="@{/books/{id}(id=${book.getBook_id()})}"
-       th:text="${book.getBook_id() + ' - ' + book.getName() + ' ' + book.getAuthor()}">
+    <a th:href="@{/books/{id}(id=${book.getId()})}"
+       th:text="${book.getId() + ' - ' + book.getName() + ' | Author: ' + book.getAuthor() +
+                    ' | Year: ' + book.getYear()}">
         id name author
+    </a>
+</div>
+
+<div th:if="${hasPages}">
+    <br/>
+    <br/>
+    <div th:text="'(' + ${page} + ')'"> page number </div>
+
+    <a th:if="${page > 0}"
+       th:href="@{/books(page=${page - 1}, books_per_page=${books_per_pages})}">
+        previous
+    </a>
+    <a th:if="${!book_list.isEmpty()}"
+       th:href="@{/books(page=${page + 1},books_per_page=${books_per_pages})}">
+        next
     </a>
 </div>
 
@@ -17,6 +33,8 @@
 <hr/>
 
 <a th:href="@{/books/new}">Create a new book</a>
+<br/>
+<a th:href="@{/books/search}">Search a book</a>
 
 </body>
 </html>

@@ -6,17 +6,20 @@
 </head>
 <body>
 
-<form th:method="PATCH" th:action="@{/books/{id}/edit(id=${book.getBook_id()})}" th:object="${book}">
+<form th:method="PATCH" th:action="@{/books/{id}/edit(id=${book.getId()})}" th:object="${book}">
     <label for="name">name: </label>
     <input type="text"  th:field="*{name}" id="name"/>
+    <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">error</div>
     <br/>
 
     <label for="author">author: </label>
     <input name="author" type="text"  th:field="*{author}" id="author"/>
+    <div style="color: red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">error</div>
     <br/>
 
     <label for="year">patronymic: </label>
     <input name="year" type="text"  th:field="*{year}" id="year"/>
+    <div style="color: red" th:if="${#fields.hasErrors('year')}" th:errors="*{year}">error</div>
     <br/>
 
     <input type="submit" value="Update book"/>
